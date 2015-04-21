@@ -1,5 +1,5 @@
 {
-  "name": "src-sockios",
+  "name": "src-ifaddrs",
   "version": "0.0.0",
   "description": "Wrappers for ioctl",
   "author": "Jacob Groundwater <groundwater@gmail.com>",
