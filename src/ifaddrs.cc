@@ -11,13 +11,13 @@ using namespace v8;
 using namespace node;
 
 NAN_METHOD(GetIFAddrs) {
-  NanScope();
+  Nan::HandleScope scope;
 
   struct ifaddrs *ifap;
 
   getifaddrs(&ifap);
 
-  Handle<Object> ifaces = NanNew<Object>();
+  Local<Object> ifaces = Nan::New<Object>();
 
   // while( ifap->ifa_next != NULL ){
 
@@ -31,21 +31,21 @@ NAN_METHOD(GetIFAddrs) {
     char* addr = inet_ntoa(addr_->sin_addr);
     char* netm = inet_ntoa(netm_->sin_addr);
 
-    Handle<Object> iface = NanNew<Object>();
+    Local<Object> iface = Nan::New<Object>();
 
-    iface->Set( NanNew<String>("address"), NanNew<String>( addr ) );
-    iface->Set( NanNew<String>("netmask"), NanNew<String>( netm ) );
+    iface->Set( Nan::New<String>("address").ToLocalChecked(), Nan::New<String>( addr ).ToLocalChecked() );
+    iface->Set( Nan::New<String>("netmask").ToLocalChecked(), Nan::New<String>( netm ).ToLocalChecked() );
 
-    ifaces->Set(NanNew<String>(name), iface );
+    ifaces->Set(Nan::New<String>(name).ToLocalChecked(), iface );
     ifap = ifap->ifa_next;
 
   // }
-  NanReturnValue(ifaces);
+  info.GetReturnValue().Set(ifaces);
 }
 
-void init(Handle<Object> exports) {
-  exports->Set(NanNew<String>("getifaddrs"),
-    NanNew<FunctionTemplate>(GetIFAddrs)->GetFunction());
+void init(Local<Object> exports) {
+  exports->Set(Nan::New<String>("getifaddrs").ToLocalChecked(),
+    Nan::New<FunctionTemplate>(GetIFAddrs)->GetFunction());
 }
 
 NODE_MODULE(binding, init)
